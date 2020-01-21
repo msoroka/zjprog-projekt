@@ -2,47 +2,45 @@ var Classes = require('../../dao/classes.dao');
 var Horses = require('../../dao/horses.dao');
 
 exports.createClass = function (req, res, next) {
-    if (req.isAuthenticated()) {
-        var cl = {
-            numer: req.body.numer,
-            kat: req.body.kat,
-            czempionat: req.body.czempionat,
-            komisja: req.body.komisja
-        };
+    var cl = {
+        numer: req.body.numer,
+        kat: req.body.kat,
+        czempionat: req.body.czempionat,
+        komisja: req.body.komisja
+    };
 
-        Classes.find({}, null, {sort: {numer: 1}}, function (err, classes) {
-            classes.forEach(val => {
-                if (val.numer >= req.body.numer) {
-                    Horses.find({klasa: val.numer}, function (err, horses) {
-                        horses.forEach(horse => {
-                            horse.klasa = val.numer + 1;
-                            Horses.update({_id: horse._id}, horse, function (err, horse) {
-                            });
+    Classes.find({}, null, {sort: {numer: 1}}, function (err, classes) {
+        classes.forEach(val => {
+            if (val.numer >= req.body.numer) {
+                Horses.find({klasa: val.numer}, function (err, horses) {
+                    horses.forEach(horse => {
+                        horse.klasa = val.numer + 1;
+                        Horses.update({_id: horse._id}, horse, function (err, horse) {
                         });
-
-                        return horses;
-                    }).then(function () {
-                        val.numer = val.numer + 1;
-                        Classes.update({_id: val._id}, val, function (err, val) {
-                        });
-
-                        return val;
                     });
-                }
-            });
 
-            return classes;
-        }).then(function () {
-            Classes.create(cl, function (err, cl) {
-                if (err) {
-                    res.json({
-                        error: err
-                    })
-                }
-                res.send(cl);
-            });
+                    return horses;
+                }).then(function () {
+                    val.numer = val.numer + 1;
+                    Classes.update({_id: val._id}, val, function (err, val) {
+                    });
+
+                    return val;
+                });
+            }
         });
-    }
+
+        return classes;
+    }).then(function () {
+        Classes.create(cl, function (err, cl) {
+            if (err) {
+                res.json({
+                    error: err
+                })
+            }
+            res.send(cl);
+        });
+    });
 };
 
 exports.getClass = function (req, res, next) {
@@ -109,32 +107,28 @@ let updateRestClass = (req, newCl) => {
 };
 
 exports.updateClass = function (req, res, next) {
-    if (req.isAuthenticated()) {
-        var newCl = {
-            numer: req.body.numer,
-            kat: req.body.kat,
-            czempionat: req.body.czempionat,
-            komisja: req.body.komisja
-        };
+    var newCl = {
+        numer: req.body.numer,
+        kat: req.body.kat,
+        czempionat: req.body.czempionat,
+        komisja: req.body.komisja
+    };
 
-        updateRestClass(req, newCl);
-        res.json({
-            message: "Class updated successfully"
-        });
-    }
+    updateRestClass(req, newCl);
+    res.json({
+        message: "Class updated successfully"
+    });
 };
 
 exports.removeClass = function (req, res, next) {
-    if (req.isAuthenticated()) {
-        Classes.delete({_id: req.params.id}, function (err, cl) {
-            if (err) {
-                res.json({
-                    error: err
-                })
-            }
+    Classes.delete({_id: req.params.id}, function (err, cl) {
+        if (err) {
             res.json({
-                message: "Class deleted successfully"
+                error: err
             })
+        }
+        res.json({
+            message: "Class deleted successfully"
         })
-    }
+    })
 };
