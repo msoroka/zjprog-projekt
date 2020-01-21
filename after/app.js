@@ -19,3 +19,5 @@ routes(router);
 server.listen(properties.PORT, () => {
     console.log(`Serwer działa na porcie ${properties.PORT}`);
 });
+
+module.exports = server

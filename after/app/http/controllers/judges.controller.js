@@ -63,7 +63,7 @@ exports.removeJudge = function (req, res, next) {
                 error: err
             })
         }
-        res.json({
+        res.status(202).json({
             message: "Judge deleted successfully"
         })
     })
