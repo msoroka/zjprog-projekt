@@ -1,6 +1,6 @@
-var Horses = require('./../dao/horses.dao');
-var Classes = require('./../dao/classes.dao');
-var compare = require('./../helpers/compare');
+var Horses = require('../../dao/horses.dao');
+var Classes = require('../../dao/classes.dao');
+var compare = require('../../helpers/compare');
 var socketIo = require('socket.io');
 
 var socket = function (server) {
