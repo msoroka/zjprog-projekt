@@ -1,0 +1,11 @@
+const express = require("express");
+const router = express.Router();
+const Horse = require("../controllers/horse.controller");
+router.get("/", Horse.getHorse);
+router.get("/:id", Horse.getHorseById);
+router.delete("/:id", Horse.removeHorse);
+router.post("/", Horse.saveHorse);
+router.put("/", Horse.updateHorse);
+router.put("/:id", Horse.gradeHorse);
+router.put("/:id/arbitrator", Horse.arbitrator);
+module.exports = router;
